@@ -10,7 +10,10 @@
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   />
 
+  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+  <!-- AR.js Marker Based -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 
   <style>
@@ -43,7 +46,7 @@
     #startScreen p {
       font-size: 16px;
       line-height: 1.5;
-      max-width: 330px;
+      max-width: 340px;
       margin: 0;
       opacity: 0.86;
     }
@@ -84,11 +87,18 @@
         const note = document.querySelector("#note");
         const markerId = marker.getAttribute("data-marker-id");
 
+        let lostTimer = null;
+
         marker.addEventListener("markerFound", async function () {
+          if (lostTimer) {
+            clearTimeout(lostTimer);
+            lostTimer = null;
+          }
+
           note.innerText = "เจอ " + markerId + " แล้ว กำลังเล่นวิดีโอ";
           console.log("Marker found:", markerId);
 
-          // ตรงนี้เผื่อใส่ Google Analytics ภายหลัง
+          // เผื่อใช้ Google Analytics ภายหลัง
           if (typeof gtag === "function") {
             gtag("event", "marker_found", {
               event_category: "AIFX_AR",
@@ -104,11 +114,15 @@
         });
 
         marker.addEventListener("markerLost", function () {
-          note.innerText = "จ่อไปที่ AIFX Marker แล้ววิดีโอจะเล่นบน marker";
           console.log("Marker lost:", markerId);
 
-          video.pause();
-          video.currentTime = 0;
+          lostTimer = setTimeout(function () {
+            note.innerText = "จ่อไปที่ AIFX Marker 01 หรือ 02 แล้ววิดีโอจะเล่นบน marker";
+            video.pause();
+
+            // ไม่ reset เวลา เพื่อช่วยลดอาการกระพริบ
+            // video.currentTime = 0;
+          }, 1000);
         });
       }
     });
@@ -144,7 +158,7 @@
   </div>
 
   <div id="note">
-    จ่อไปที่ AIFX Marker แล้ววิดีโอจะเล่นบน marker
+    จ่อไปที่ AIFX Marker 01 หรือ 02 แล้ววิดีโอจะเล่นบน marker
   </div>
 
   <a-scene
@@ -172,6 +186,11 @@
       url="./assets/marker/pattern-aifx-01.patt"
       data-marker-id="AIFX_01"
       play-video-on-marker
+      emitevents="true"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance="0.01"
+      smoothThreshold="5"
     >
       <a-plane
         position="0 0 0"
@@ -188,6 +207,11 @@
       url="./assets/marker/pattern-aifx-02.patt"
       data-marker-id="AIFX_02"
       play-video-on-marker
+      emitevents="true"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance="0.01"
+      smoothThreshold="5"
     >
       <a-plane
         position="0 0 0"
