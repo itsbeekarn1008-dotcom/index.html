@@ -1,8 +1,9 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>AIFX Custom Marker Test</title>
+  <title>AIFX AR Custom Markers</title>
 
   <meta
     name="viewport"
@@ -17,52 +18,20 @@
       margin: 0;
       overflow: hidden;
       background: transparent;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    #note {
+    #startScreen {
       position: fixed;
-      top: 12px;
-      left: 12px;
-      right: 12px;
+      inset: 0;
       z-index: 9999;
+      background: rgba(0, 0, 0, 0.94);
       color: white;
-      background: rgba(0,0,0,0.65);
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="note">
-    จ่อไปที่ AIFX Marker ถ้าจับได้จะมีกล่องแดงขึ้นมา
-  </div>
-
-  <a-scene
-    embedded
-    vr-mode-ui="enabled: false"
-    renderer="antialias: true; alpha: true"
-    arjs="sourceType: webcam; debugUIEnabled: false;"
-  >
-    <a-marker
-      type="pattern"
-      url="./assets/marker/pattern-aifx-01.patt"
-    >
-      <a-box
-        position="0 0.5 0"
-        rotation="0 45 0"
-        scale="1 1 1"
-        color="red"
-      ></a-box>
-    </a-marker>
-
-    <a-entity camera></a-entity>
-  </a-scene>
-</body>
-</html>      text-align: center;
       padding: 24px;
     }
 
@@ -113,9 +82,19 @@
         const marker = this.el;
         const video = document.querySelector("#aifxVideo");
         const note = document.querySelector("#note");
+        const markerId = marker.getAttribute("data-marker-id");
 
         marker.addEventListener("markerFound", async function () {
-          note.innerText = "เจอ AIFX Marker แล้ว กำลังเล่นวิดีโอ";
+          note.innerText = "เจอ " + markerId + " แล้ว กำลังเล่นวิดีโอ";
+          console.log("Marker found:", markerId);
+
+          // ตรงนี้เผื่อใส่ Google Analytics ภายหลัง
+          if (typeof gtag === "function") {
+            gtag("event", "marker_found", {
+              event_category: "AIFX_AR",
+              marker_id: markerId
+            });
+          }
 
           try {
             await video.play();
@@ -126,6 +105,8 @@
 
         marker.addEventListener("markerLost", function () {
           note.innerText = "จ่อไปที่ AIFX Marker แล้ววิดีโอจะเล่นบน marker";
+          console.log("Marker lost:", markerId);
+
           video.pause();
           video.currentTime = 0;
         });
@@ -157,7 +138,7 @@
     <h1>AIFX AR Demo</h1>
     <p>
       กด Start AR แล้วอนุญาตให้ใช้กล้อง<br />
-      จากนั้นจ่อมือถือไปที่ AIFX Marker
+      จากนั้นจ่อมือถือไปที่ AIFX Marker 01 หรือ 02
     </p>
     <button id="startBtn">Start AR</button>
   </div>
@@ -185,12 +166,29 @@
       ></video>
     </a-assets>
 
+    <!-- Marker 01 -->
     <a-marker
       type="pattern"
       url="./assets/marker/pattern-aifx-01.patt"
+      data-marker-id="AIFX_01"
       play-video-on-marker
     >
-      <!-- วิดีโอแนวตั้ง 9:16 -->
+      <a-plane
+        position="0 0 0"
+        rotation="-90 0 0"
+        width="1.125"
+        height="2"
+        material="shader: flat; src: #aifxVideo; side: double;"
+      ></a-plane>
+    </a-marker>
+
+    <!-- Marker 02 -->
+    <a-marker
+      type="pattern"
+      url="./assets/marker/pattern-aifx-02.patt"
+      data-marker-id="AIFX_02"
+      play-video-on-marker
+    >
       <a-plane
         position="0 0 0"
         rotation="-90 0 0"
