@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>AIFX AR Video</title>
+  <title>AIFX AR Custom Marker</title>
 
   <meta
     name="viewport"
@@ -29,7 +29,7 @@
       inset: 0;
       z-index: 9999;
       background: rgba(0, 0, 0, 0.94);
-      color: #ffffff;
+      color: white;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -46,9 +46,9 @@
     #startScreen p {
       font-size: 16px;
       line-height: 1.5;
-      max-width: 320px;
+      max-width: 330px;
       margin: 0;
-      opacity: 0.85;
+      opacity: 0.86;
     }
 
     #startBtn {
@@ -56,8 +56,8 @@
       padding: 14px 30px;
       border: none;
       border-radius: 999px;
-      background: #ffffff;
-      color: #000000;
+      background: white;
+      color: black;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
@@ -69,7 +69,7 @@
       left: 12px;
       right: 12px;
       z-index: 9998;
-      color: #ffffff;
+      color: white;
       background: rgba(0, 0, 0, 0.58);
       padding: 12px;
       border-radius: 12px;
@@ -87,7 +87,7 @@
         const note = document.querySelector("#note");
 
         marker.addEventListener("markerFound", async function () {
-          note.innerText = "เจอ Hiro Marker แล้ว กำลังเล่นวิดีโอ";
+          note.innerText = "เจอ AIFX Marker แล้ว กำลังเล่นวิดีโอ";
 
           try {
             await video.play();
@@ -97,7 +97,7 @@
         });
 
         marker.addEventListener("markerLost", function () {
-          note.innerText = "จ่อไปที่ Hiro Marker แล้ววิดีโอจะเล่นบน marker";
+          note.innerText = "จ่อไปที่ AIFX Marker แล้ววิดีโอจะเล่นบน marker";
           video.pause();
           video.currentTime = 0;
         });
@@ -129,13 +129,13 @@
     <h1>AIFX AR Demo</h1>
     <p>
       กด Start AR แล้วอนุญาตให้ใช้กล้อง<br />
-      จากนั้นจ่อมือถือไปที่ Hiro Marker
+      จากนั้นจ่อมือถือไปที่ AIFX Marker
     </p>
     <button id="startBtn">Start AR</button>
   </div>
 
   <div id="note">
-    จ่อไปที่ Hiro Marker แล้ววิดีโอจะเล่นบน marker
+    จ่อไปที่ AIFX Marker แล้ววิดีโอจะเล่นบน marker
   </div>
 
   <a-scene
@@ -157,7 +157,11 @@
       ></video>
     </a-assets>
 
-    <a-marker preset="hiro" play-video-on-marker>
+    <a-marker
+      type="pattern"
+      url="./assets/marker/pattern-aifx-01.patt"
+      play-video-on-marker
+    >
       <!-- วิดีโอแนวตั้ง 9:16 -->
       <a-plane
         position="0 0 0"
