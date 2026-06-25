@@ -2,12 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>AIFX AR Demo</title>
+  <title>AIFX AR Test</title>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
@@ -16,79 +13,29 @@
     body {
       margin: 0;
       overflow: hidden;
-      background: #000;
-      font-family: Arial, sans-serif;
+      background: transparent;
     }
 
-    #startScreen {
+    #note {
       position: fixed;
-      inset: 0;
+      top: 12px;
+      left: 12px;
+      right: 12px;
       z-index: 9999;
-      background: #000;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      color: white;
+      background: rgba(0,0,0,0.6);
+      padding: 12px;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
       text-align: center;
-      padding: 24px;
-    }
-
-    #startBtn {
-      margin-top: 20px;
-      padding: 14px 26px;
-      border: none;
-      border-radius: 999px;
-      background: #fff;
-      color: #000;
-      font-size: 16px;
-      cursor: pointer;
     }
   </style>
-
-  <script>
-    AFRAME.registerComponent("play-video-on-marker", {
-      init: function () {
-        const marker = this.el;
-        const video = document.querySelector("#aifxVideo");
-
-        marker.addEventListener("markerFound", function () {
-          video.play();
-        });
-
-        marker.addEventListener("markerLost", function () {
-          video.pause();
-          video.currentTime = 0;
-        });
-      }
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const startBtn = document.querySelector("#startBtn");
-      const startScreen = document.querySelector("#startScreen");
-
-      startBtn.addEventListener("click", async function () {
-        const video = document.querySelector("#aifxVideo");
-
-        try {
-          await video.play();
-          video.pause();
-          video.currentTime = 0;
-        } catch (e) {
-          console.log(e);
-        }
-
-        startScreen.style.display = "none";
-      });
-    });
-  </script>
 </head>
 
 <body>
-  <div id="startScreen">
-    <h1>AIFX AR Demo</h1>
-    <p>กด Start AR แล้วอนุญาตให้ใช้กล้อง จากนั้นจ่อไปที่ Hiro Marker</p>
-    <button id="startBtn">Start AR</button>
+  <div id="note">
+    จ่อไปที่ Hiro Marker ถ้าจับได้จะมีกล่องสีแดงเด้งขึ้นมา
   </div>
 
   <a-scene
@@ -97,26 +44,13 @@
     renderer="antialias: true; alpha: true"
     arjs="sourceType: webcam; debugUIEnabled: false;"
   >
-    <a-assets>
-      <video
-        id="aifxVideo"
-        src="./assets/video/ไม่มีชื่อ (1080 x 1920 px)"
-        preload="auto"
-        loop
-        muted
-        playsinline
-        webkit-playsinline
-      ></video>
-    </a-assets>
-
-    <a-marker preset="hiro" play-video-on-marker>
-      <a-video
-        src="#aifxVideo"
-        position="0 0 0"
-        rotation="-90 0 0"
-        width="2.2"
-        height="1.25"
-      ></a-video>
+    <a-marker preset="hiro">
+      <a-box
+        position="0 0.5 0"
+        rotation="0 45 0"
+        scale="1 1 1"
+        color="red"
+      ></a-box>
     </a-marker>
 
     <a-entity camera></a-entity>
